@@ -27,7 +27,10 @@ def GetData(file_name, sheet=None):
     """Extracts data from the file_name xlsx file.
 
     Gets all the datapoints located in the A and B columns of an excel sheet,
-    up until the first empty A or B cell, where A is time, and B is the value
+    up until the first empty A or B cell, where A is time, and B is the value.
+
+    Ignores the first row (Since it usually has column names), and only extracts
+    values if the respective C column cell contains the string "Baseline"
 
     Params:
         file_name: The name of a file_name file. Should be located in the script's
@@ -57,9 +60,10 @@ def GetData(file_name, sheet=None):
 
     data = []
 
-    i = 1
+    i = 2
     a_cell = "A" + str(i)
     b_cell = "B" + str(i)
+    c_cell = "C" + str(i)
 
     while ws[a_cell].value is not None and ws[b_cell].value is not None:
         if not isinstance(ws[a_cell].value, numbers.Number):
@@ -69,14 +73,16 @@ def GetData(file_name, sheet=None):
             print "ERROR: Value at cell", b_cell, "is not a number"
             raise ValueError
 
+        #if ws[c_cell].value == "Baseline":
         data.append((ws[a_cell].value, ws[b_cell].value))
         i += 1
         a_cell = "A" + str(i)
         b_cell = "B" + str(i)
+        c_cell = "C" + str(i)
 
     data.sort(key=(lambda x: x[0]))
-    t = [i[0] for i in data]
-    vals = [i[1] for i in data]
+    t = [j[0] for j in data]
+    vals = [j[1] for j in data]
 
     return np.array(t), np.array(vals)
 
