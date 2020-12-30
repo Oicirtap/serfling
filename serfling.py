@@ -73,8 +73,8 @@ def GetData(file_name, sheet=None):
             print "ERROR: Value at cell", b_cell, "is not a number"
             raise ValueError
 
-        #if ws[c_cell].value == "Baseline":
-        data.append((ws[a_cell].value, ws[b_cell].value))
+        if ws[c_cell].value == "Baseline":
+            data.append((ws[a_cell].value, ws[b_cell].value))
         i += 1
         a_cell = "A" + str(i)
         b_cell = "B" + str(i)
